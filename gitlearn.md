@@ -81,7 +81,7 @@
 > 创建github远程仓库(例如:testpro),关联本地仓库
 
     ssh-keygen -t rsa 
-    //一路回车,根据创建出来的路径,打开.pub文件
+    //一路回车,根据创建出来的路径,打开.pub文件,
     把里面的东西全部copy给github的SSH keys
 
     git remote add origin git@github.com/username/testpro.git
@@ -94,3 +94,27 @@
     git push -u origin master
 
 
+![命令关系图](http://p1-tt.byteimg.com/large/pgc-image/bbe1814b918345b69282f3e587a61715?from=pc)
+
+> 常用Git命令
+
+| 命令                       | 作用                                   |
+| -------------------------- | -------------------------------------- |
+| git clone *url*            | 克隆远程版本库                         |
+| git init                   | 初始化本地版本库                       |
+| git status                 | 查看状态                               |
+| git diff                   | 查看变更内容                           |
+| git add                    | 跟踪所以改动过的文件                   |
+| git add *file*             | 跟踪指定文件                           |
+| git mv *old* *new*         | 文件改名                               |
+| git rm *file*              | 删除文件                               |
+| git rm --cached *file*     | 停止跟踪文件但不删除                   |
+| git commit -m "commit msg" | 提交所有更改过的文件                   |
+| git commit --amend         | 修改最后一次提交                       |
+| git log                    | 查看提交历史                           |
+| git log -p *file*          | 查看指定文件的提交历史                 |
+| git blame *file*           | 以列表的方式查看指定文件的提交历史     |
+| git reset --hard HEAD      | 撤销工作目录中所有未提交文件的修改内容 |
+| git checkout HEAD *file*   | 撤销指定未提交文件的修改内容           |
+| git revert *commitid*      | 撤销指定文件的提交                     |
+| aaa                        | bbb                                    |
