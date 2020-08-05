@@ -56,7 +56,7 @@
 
 > 撤销修改
 
-    //撤销未登记前的改动,及再上一次add后文件做了更改,这命令把这些更改撤销
+    //撤销未登记前的改动,及在上一次add后文件做了更改,这命令把这些更改撤销
     echo 3333>>test.txt
     cat test.txt
     git checkout -- test.txt 
