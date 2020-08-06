@@ -84,7 +84,7 @@
     //一路回车,根据创建出来的路径,打开.pub文件,
     把里面的东西全部copy给github的SSH keys
 
-    git remote add origin git@github.com/username/testpro.git
+    git remote add origin git@github.com:username/testpro.git
     或
     git remote add origin https://github.com/username/testpro.git
 
