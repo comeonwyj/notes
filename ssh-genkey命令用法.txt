@@ -1,1 +1,2 @@
  ssh-keygen -t rsa -C "626606571@qq.com"
+ ssh-keygen -t rsa -f ~/.ssh/id_rsa_x -C "yourmail@xxx.com"
