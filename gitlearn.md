@@ -85,6 +85,8 @@
     把里面的东西全部copy给github的SSH keys
 
     git remote add origin git@github.com/username/testpro.git
+    或
+    git remote add origin https://github.com/username/testpro.git
 
 > 重要! 先要和本地合并一下,再推送给远程备份
     git pull origin master 
@@ -110,7 +112,7 @@
 | git rm *file*              | 删除文件                               |
 | git rm --cached *file*     | 停止跟踪文件但不删除                   |
 | git commit -m "commit msg" | 提交所有更改过的文件                   |
-| git commit --amend         | 修改最后一次提交                       |
+| git commit --amend         | 覆盖最后一次提交                       |
 | git log                    | 查看提交历史                           |
 | git log -p *file*          | 查看指定文件的提交历史                 |
 | git blame *file*           | 以列表的方式查看指定文件的提交历史     |
