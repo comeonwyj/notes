@@ -1,6 +1,0 @@
-"initail" 
-a 
-b  
-c 
-d 
-e 
