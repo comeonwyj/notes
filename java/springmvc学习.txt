@@ -1,0 +1,64 @@
+新建一java web dynamic工程
+一，首先要导入包：
+spring-aop.jar
+spring-bean-xxx.jar
+spring-context-xxx.jar
+spring-core-xxx.jar
+spring-expression-xxx.jar
+spring-web.jar
+spring-webmvc.jar
+commons-logging.jar
+二、配置web.xml
+在web.xml中加入一个servlet，名称为：DispatcherServlet，配置如下
+<servlet>
+		<servlet-name>springDispatcherServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:springmvc.xml</param-value>
+		</init-param> //这一个参数配置也可以省略，但必须在WEB-INF目录下新建一个xml文件。名称为：servlet-name 名称-servlet.xml
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<!-- Map all requests to the DispatcherServlet for handling -->
+	<servlet-mapping>
+		<servlet-name>springDispatcherServlet</servlet-name>
+		<url-pattern>/</url-pattern>  //拦截所有请求，这里可以指定目录如abc/，或指定扩展名.do .action，意思是只拦截指定路径或扩展名的文件
+	</servlet-mapping>
+三、配置springmvc.xml文件
+1、配置扫描controller类的路径
+<context:component-scan base-package="cn.bgy.controller" >		
+	</context:component-scan>
+2、配置一个bean，这个bean是视图解析器，由这个bean解决最终的显示视图jsp文件。
+<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/"></property>//标明了要解析视图的路径
+		<property name="suffix" value=".jsp"></property>//标明了要解析视图的扩展名
+	</bean>
+四、创建controller类文件：
+1、创建包cn.bgy.controller
+2、创建xxxController类文件:
+@Controller  //用注解方式标明这是一个控制器
+public class FrontController {
+	@RequestMapping("aaa/bbb") 
+	// 用注解方式来标明在访问最终视图文件vindex.jsp之前，设定的访问路径和要进行的代码动作。访问路径有多种设置方式：
+	1、任意指定
+	2、带通配符
+	3、带路径参数 参数用{}来包含。路径参数在dotest方法的参数里重新命名，以便在方法体内使用。
+	
+	public String dotest(Model model) {
+		model.addAttribute("astr", "hello springmvc");
+		return "vindex";  如果返回的是views子目录里的jsp文件，则应把子路径写上：aaa/bbb/(不带.jsp的文件名)success
+	}
+}
+3、首页经过springmvc的方法：
+(1)把index.jsp放进/WEB-INF/views目录中。即3.2设置的。
+(2)在web.xml里设置初始页面为“/"
+ <welcome-file-list>
+    <welcome-file>/</welcome-file>   
+  </welcome-file-list>
+(3)然后在controller类文件中写映射：
+@RequestMapping("/")
+	public String index(Model model) {
+		model.addAttribute("index", "这是首页的消息或对象显示");
+		return "index";
+	}

@@ -1,0 +1,111 @@
+NodeJs或者命令行爬取网络教程并生成PDF文件，以阮一峰JavaScript教程和ES6教程为例
+
+utils.js:
+const request = require("request");
+ 
+function parseBody(url) {
+  return new Promise((resolve, reject) => {
+    request(url, (error, res, body) => {
+      if (!error && res.statusCode === 200) {
+        resolve(body);
+      } else {
+        reject("获取页面失败" + error);
+      }
+    });
+  });
+}
+ 
+module.exports = {
+  parseBody
+};
+新建config文件，添加配置
+
+// 阮一峰JS教程
+const javaScriptCourse = {
+  url: "https://wangdoc.com/javascript", // 要爬取的网站地址
+  name: "阮一峰JavaScript教程.pdf", // 导出的文件名字
+  wrapEle: ".menu-list", //  导航父元素的class
+  css: "@page { size: A6 landscape } html { font-size: 18pt } ", // 生成pdf的大小和字体
+  getUrlList(body, ele, url) {
+    // 从返回的html中获取章节地址
+    let urlList = [];
+    $(body)
+      .find(ele)
+      .eq(0)
+      .find("li a")
+      .each((i, v) => {
+        const pathStr = $(v).attr("href");
+        const path = pathStr.slice(pathStr.indexOf("/"));
+        urlList.push(url + path);
+      });
+    return urlList;
+  }
+};
+
+新建index.js为项目的入口文件，引入相关依赖
+const request = require("./util"),
+  percollate = require("percollate"),
+  markdownpdf = require("markdown-pdf"),
+  fs = require("fs"),
+  { javaScriptCourse, es6Course, baseOpt } = require("./config");
+ 
+const getHtml = url => {
+  return request.parseBody(url);
+};
+ 
+const getJSCourse = () => {
+  const { url, name, wrapEle, getUrlList, css } = javaScriptCourse;
+ 
+  getHtml(url).then(res => {
+    const urlList = getUrlList(res, wrapEle, url);
+    percollate.configure();
+    percollate.pdf(urlList, {
+      output: name,
+      css
+    });
+  });
+};
+ 
+// 生成pdf文件
+getJSCourse()
+复制代码
+将Markdown文件生成PDF
+这个以阮一峰大神ES6教程为例，地址为：es6.ruanyifeng.com ，打开网站后，我们发现，网站是通过接口动态生成内容的，网站请求返回的内容都为Markdown，生成的PDF文件如下，没有转成我们希望的样子，内容为原始的Markdown语法
+
+ 到此，我没有再研究percollate添加某个配置之后，是否就可以完美的将Markdown转成PDF文件，因为我知道Node有一个包markdown-pdf可以将Markdown转成PDF文件，还知道VScode有一个插件也可以将Markdown转成PDF文件，这样的话，我们首先要生成一个包含所有内容的Markdown文件，Node的fs模块可以很容易的完成这件事情，生成Markdown文件以后，再使用上面讲述的两种方法将Markdown转成PDF即可，代码如下
+ const urlList = getUrlList(res, wrapEle, url);
+    
+    const reqList = [];
+    urlList.forEach(v => {
+      console.log("请求地址---", v);
+      reqList.push(getHtml(v));
+    });
+    console.log("开始发出请求...");
+ 
+    Promise.all(reqList)
+      .then(arrRes => {
+        console.log("所有请求都成功了---");
+        const md = arrRes.join(" ");
+        // console.log(md);
+        const optPath =
+          "/Users/apple/Documents/my/LearningLog/NodeJs/网页生成pdf/";
+ 
+        fs.writeFileSync(`${name}.md`, md, function(err) {
+          if (err) {
+            return console.error(err);
+          }
+          console.log("数据写入成功！");
+        });
+        console.log("开始生成pdf文件...");
+        markdownpdf({
+          paperFormat: "A6"
+          // paperOrientation: "landscape"
+        })
+          .from(`${optPath}${name}.md`)
+          .to(`${optPath}${name}.pdf`, function() {
+            console.log("生成pdf文件成功");
+          });
+      })
+      .catch(err => {
+        console.log("请求报错---", err);
+      });

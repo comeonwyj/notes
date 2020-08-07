@@ -1,0 +1,155 @@
+一、语法
+1、javascript程序是用Unicode字符集编写的.
+2、JavaScript是区分大小写的语言，关键字、变量，函数名和所有的标识符都要小写
+3、特殊字符的Unicode表示法：
+	空格符： \u0020
+	水平制表符：\u0009
+	垂直制表符：\u000B
+	换行符:\u000A
+	回车符:\u000D
+	行分隔符:\u2028
+	段分隔符:\u2029
+4、注释: 行注释//  或 段注释/* */
+5、javascript标识符必须以字母/下划线/美元符号开始,数字开头是不允许的
+6、可选的分号:
+JavaScript使用分号将语句分隔开.
+如果语句各自独占一行,通常可以省略语句之间的分号.
+如果在一行内书写,第一个分号不能省略掉: 
+a=3;b=4;
+在缺少了分号就无法解析的时候,javascript才会填补分号:
+var a
+a
+=
+3
+将会解析为: var a; a=3; 
+var y=x+f
+(a+b).toString();
+将会解析为: var y=x+f(a+b).toString();
+通常来讲:如果一条语句以"(" "[" "/"开始,那么极有可能和前一条语句何在一起解析.
+如果在return,break,continue后换行,那么系统会直接在后自动添加分号.
+return
+true
+会解析为:return; true;
+++或--运算符:
+x
+++
+y
+将会解析为:x;++y;
+JavaScript的数据类型划分:
+1.原始类型(null,undefined,数字,字符串,布尔)5种,对象类型1种
+函数是一种特殊对象,除了数组(Array)类和函数(Function)外,还定义了其他三种有用的类:日期(Date),正则(RegExp)和错误(Error)
+只有null和undefined是无法拥有自己方法的值.
+2.可变类型和不可变类型
+可变类型:对象和数组.
+不可变类型:数字,字符串,布尔,null,undefined
+JavaScript变量是无类型的(untyped)
+javascript不区分整数值和浮点数值.javascript中的所有数字均用浮点数值表示.
+1.整形直接量:0 3 10000
+十六进制表示法:0xff //15*16+15=255(十进制)
+八进制表示法:0377 //3*8^2+7*8^1+7*8^0=3*64+7*8+7=255
+2.浮点数直接量:
+3.14 23.789 .3333 6.02e23 1.47382333e-32
+浮点数值的最高精度是17位小数.
+3.数值范围:
+Number.MIN_VALUE 5e-324
+Number.MAX_VALUE 中——在大多数浏览器中，这个值是 1.7976931348623157e+308
+4.NaN
+NaN ，即非数值（Not a Number）是一个特殊的数值
+在 ECMAScript中，任何数值除以 0会返回 NaN，因此不会影响其他代码的执行。
+任何涉及 NaN 的操作（例如 NaN /10）都会返回 NaN 
+NaN 与任何值都不相等，包括 NaN 本身
+isNaN() 在接收到一个值之后，会尝试将这个值转换为数值。
+isNaN() 确实也适用于对象。在基于对象调用 isNaN()
+函数时，会首先调用对象的 valueOf() 方法，然后确定该方法返回的值是否可以转
+换为数值。如果不能，则基于这个返回值再调用 toString() 方法，再测试返回值。
+而这个过程也是 ECMAScript中内置函数和操作符的一般执行流程
+5.Infinity
+Infinity 和 -Infinity 基于它们的加,减,乘,除运算结果还是无穷大值.
+任何数/0=Infinity 但有一个是例外:0/0 是NaN
+Infinity/Infinity=NaN
+Number.MAX_VALUE+1=Infinity
+Number.MIN_VALUE/2=0
+0===-0
+1/0!==1/-0
+6.数值转换
+函数 Number() 可以用于任何数据类型
+parseInt() 和 parseFloat()专门用于把字符串转换成数值,如果第一个字符不是数字字符或者负号， parseInt()就会返回 NaN 
+Number('123aaa') => NaN
+parseInt('123aaa') => 123
+Number(undefined) = parseInt(undefined) => NaN
+Number('') => 0
+parseInt('') =>NaN
+var num1 = parseInt("10", 2); //2 （按二进制解析）
+var num2 = parseInt("10", 8); //8 （按八进制解析）
+var num3 = parseInt("10", 10); //10 （按十进制解析）
+var num4 = parseInt("10", 16); //16 （按十六进制解析）
+parseInt(111,2) =>7
+Number('7').toString(2) =>111
+var o = new Object();
+var o = new Object; // 有效，但不推荐省略圆括号
+Object 类型是所有它的实例的基础。换句话说，Object 类型所具有的任何属性和方法也同样存在于更具体的对象中。
+Object 的每个实例都具有下列属性和方法。
+constructor ：保存着用于创建当前对象的函数.
+hasOwnProperty(propertyName) ：用于检查给定的属性在当前对象实例中（而不是在实例的原型中）是否存在。
+isPrototypeOf(object) ：用于检查传入的对象是否是传入对象的原型
+propertyIsEnumerable(propertyName) ：用于检查给定的属性是否能够使用 for-in 语句来枚举
+toLocaleString() ：返回对象的字符串表示，该字符串与执行环境的地区对应。
+toString() ：返回对象的字符串表示。
+valueOf() ：返回对象的字符串、数值或布尔值表示。通常与 toString() 方法的返回值相同。
+布尔值与别的数据类型:
+下面这些值都会转换为false:
+undefined null 0 -0 NaN "" 除此之外,所有其他值,包括所有对象(数组)都会转换为true
+布尔运算:
+!!和Boolean()作用相同:!!"blue"  Boolean("blue") =>true  Boolean(undefined) !!undefined =>false
+NaN && 任意值  => NaN
+undefined && 任意值 =>undefined
+&& 的作用用来取第二个数,如果两个操作数都是对象，则返回第二个操作数；
+|| 的作用用来取第一个数, 如果第一个操作数是对象，则返回第一个操作数；
+|| 经常用来设置默认值 var myObject = preferredObject || backupObject; 
+null:用来表示数字,字符串和对象是空值.  typeof null =>object可以认为是一个特殊的对象值,含义是"非对象"
+undefined: typeof undefined =>undefined
+1.变量未初始化.未声明的变量也会回undefined
+2.对象属性不存在 
+3.数组元素不存在
+4.函数没有返回值,则返回undefined
+区别:
+undefined是表示系统级的,出乎意料的或类似的值的空缺.
+null是表示程序级的,正常的或在意料之中的值的空缺.
+undefined值派生自Null值,因此 null==undefined =>true
+全局对象:在代码的最顶级(不在任何函数内的),可以使用关键字this来引用全局对象:var global=this; 在浏览器中,windows就是this,代表全局变量.
+一元加和减操作符
+该操作符会像 Number() 转型函数一样对这个值执行转换,可以认为+可替代Number()
+var s1 = "01";
+var s2 = "1.1";
+var s3 = "z";
+var b = false;
+var f = 1.1;
+var o = {
+valueOf: function() {
+return -1;
+}
+};
+s1 = +s1; // 值变成数值 1
+s2 = +s2; // 值变成数值 1.1
+s3 = +s3; // 值变成 NaN
+b = +b; // 值变成数值 0
+f = +f; // 值未变，仍然是 1.1
+o = +o; // 值变成数值-1
+比较:
+任何操作数与 NaN 进行关系比较，结果都是 false 。于是，就出现了下面这个有意思的现象：
+var result1 = NaN < 3; //false
+var result2 = NaN >= 3; //false
+相等和不相等——先转换再比较，全等和不全等——仅比较而不转换。
+var result1 = ("55" == 55); //true，因为转换后相等
+var result2 = ("55" === 55); //false，因为不同的数据类型不相等
+null 和 undefined 是相等的。
+null == undefined 会返回 true ，因为它们是类似的值；
+null === undefined 会返回 false ，因为它们是不同类型的值。
+要比较相等性之前，不能将 null 和 undefined 转换成其他任何值。
+如果有一个操作数是 NaN ，则相等操作符返回 false ，而不相等操作符返回 true 。
+即使两个操作数都是 NaN ，相等操作符也返回 false 
+逗号操作符
+使用逗号操作符可以在一条语句中执行多个操作，如下面的例子所示：
+var num1=1, num2=2, num3=3;
+在用于赋值时，逗号操作符总会返回表达式中的最后一项，如下面的例子所示：
+var num = (5, 1, 4, 8, 0); // num 的值为 0  =号后面的表达式必须用()包住

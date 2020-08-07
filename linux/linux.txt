@@ -1,0 +1,301 @@
+
+一、linux目录结构和作用
+/		根目录 所有目录都是由根目录衍生出来的；
+/bin	存放系统命令，普通用户和 root 都可以执行。放在 /bin 下的命令在单用户模式下也可以执行
+/boot	存放内核及启动所需要的文件，系统启动目录，保存与系统启动相关的文件，如内核文件和启动引导程序（grub）文件等
+/dev	存放设备文件
+/etc	系统配置文件，系统内所有采用默认安装方式（rpm 安装）的服务配置文件全部保存在此目录中，如用户信息、服务的启动脚本、常用服务的配置文件等
+/home	普通用户的宿主目录，用户数据存放在其主目录中。在创建用户时，每个用户要有一个默认登录和保存自己数据的位置，就是用户的主目录，所有普通用户的主目录是在 /home/ 下建立一个和用户名相同的目录。
+/lib	系统调用的函数库保存位置
+/mnt	放临时的映射文件系统，通常用来挂载使用
+/proc	存储进程和系统信息，虚拟文件系统。该目录中的数据并不保存在硬盘上，而是保存到内存中。主要保存系统的内核、进程、外部设备状态和网络状态等。如 /proc/cpuinfo 是保存 CPU 信息的，/proc/devices 是保存设备驱动的列表的，/proc/filesystems 是保存文件系统列表的，/proc/net 是保存网络协议信息的......
+/root	超级用户的主目录
+/sbin	存放系统管理程序，保存与系统环境变量设置相关的命令，只有 root 可以使用这些命令进行系统环境设置，但也有些命令可以允许普通用户查看
+/tmp	临时文件   
+/var    系统默认日志存放目录
+/usr(universal shared resource)	存放应用程序，命令程序文件、程序库、手册和其它文档。
+/usr/bin/   存放系统命令，普通用户和超级用户都可以执行。这些命令和系统启动无关，在单用户模式下不能执行
+/usr/sbin/  存放根文件系统不必要的系统管理命令，如多数服务程序，只有 root 可以使用。
+/usr/lib/   应用程序调用的函数库保存位置
+/usr/XllR6/ 图形界面系统保存位置
+/usr/local/ 手工安装的软件保存位置。我们一般建议源码包软件安装在这个位置
+/usr/share/ 应用程序的资源文件保存位置，如帮助文档、说明文档和字体目录
+/usr/src/   源码包保存位置。我们手工下载的源码包和内核源码包都可以保存到这里。不过笔者更习惯把手工下载的源码包保存到 /usr/local/src/ 目录中，把内核源码保存到 /usr/src/linux/ 目录中
+/usr/include    C/C++ 等编程语言头文件的放置目录
+
+二、目录管理
+1、切换目录cd 
+    cd 相对目录和绝对目录
+    cd ~ #表示回到自己的主目录，对于 root 用户，其主目录为 /root
+    cd #没有加上任何路径，也代表回到当前登录用户的主目录
+    cd ..#表示切换到目前的上一级目录
+    cd - #表示回到刚刚的那个目录
+
+2、查看当前是哪个目录 pwd
+
+3、查看当前目录下有什么？ls
+    ls  普通列表
+    ls -l 或 ll  详细情况列表
+    ls -al 除了详细情况列表，还会显示出. ..即当前目录和上一级目录的表示
+    ls -h(human) 详细情况列表,按照人们习惯的单位显示文件大小
+	若要按文件大小对目录进行排序，请使用ls -lS
+	若要按相反顺序列出内容，请使用ls -lr:
+	若要按列出内容，请使用ls -c:
+	只列出目录中的.txt文件：ls *.txt
+	按文件大小列出：ls -s
+	按时间和日期排序：ls -d
+	分机排序：ls -X
+	按文件大小排序：ls -S
+	具有文件大小的长格式：ls -ls
+	ls -R 所有目录及其内容的递归列表
+	
+4、创建目录 mkdir
+   一次性创建多级目录  mkdir -p
+
+5、删除目录(目录里不能有文件的情况) rmdir
+    删除多级目录(目录里不能有文件的情况) rmdir -p
+
+6、复制目录 cp -r /root/src /tmp(/tmp/dest)
+
+
+三、文件管理 
+1、创建文件：
+    touch filename 若文件不存在，则创建，若存在，则修改
+    touch filename1.txt filename2.txt 一次创建多个文件
+
+2、创建快捷方式：目标文件没有写文件名，会和原名一致
+    创建软链接:ln -s /root/filename(源文件必须写成绝对路径) /tmp  则在/tmp下有filename
+    创建硬链接：ln -root/cangls /tmp 建立硬链接文件，
+
+3、复制文件 cp 
+    不改名复制 cp filename1.txt /tmp/
+    改名复制   cp filename1.txt /tmp/filename2.txt
+    保留原文件属性：cp -p filename1 /tmp 
+
+4、复制链接
+    cp -d
+    不加"-d"选项，实际复制的是软链接的源文件，而不是软链接文件
+
+5、删除文件及目录
+     rm -f test.txt
+     rm -r /testdir    删除目录，若有文件则一块删除
+     rm -rf /tmp       -r 删除目录 -f 强制删除目录及其下的文件，不再提示
+
+6、移动（剪切）文件或目录
+    mv 移动之后，源文件会被删除
+    mv -f filename /tmp -f 强制覆盖不再提示
+    mv -vn filename1 filename2 filename3 /tmp/ -n若有同名文件，则不会覆盖
+	mv -v *.txt /tmp 加入"-v"选项，可以看到有哪些文件进行了移动
+
+7、改名
+    mv filename1 filename2  把filename1改名为filename2
+    
+8、查 find / -name demo.jpg <--在根目录下查找 demo.jpg 文件，比较耗时
+    grep -rl "python" ./
+    find 目录 -name '*nginx*' 查找
+    查找./目录下文件名中包含python的文件
+
+    find | grep luoluo
+    将当前目录下（包括子目录）的文件名中含有luoluo的文件过滤出来，即使是当前目录子目录下的文件，也能被找出来。
+
+    find | xargs grep luoluo
+    将当前目录下（包括子目录）的文件内容中含有luoluo的行过滤出来
+
+    假如说我们记得的文件名非常有限，查找出来的文件太多，但是我们记得一部分文件里面的内容那么我们就可以通过管道命令过滤一下文件内容：
+    find 目录 -name '*nginx*'  |  xargs grep '内容'，如下即可找出所有以.conf结果而且内容包含location的文件
+
+    ll | grep luoluo
+    类似find | grep luoluo，只是不能递归查找子目录下的文件名
+
+    ls -l "*python*"
+    展示当前目录下包含python 的目录
+
+    查看筛选日志：grep -r -C 50 pthon  过滤日志中包含python往下50行
+
+
+四、自动补全  tab  若有两个以上的前缀则会列出
+
+五、查看命令别名 alias rm
+
+六、查看命令的绝对路径：which rm
+
+七、判断是内部命令还是外部命令 type
+    内部命令由 Shell 自带，会随着系统启动，可以直接从内存中读取；而外部命令仅是在系统中有对应的可执行文件，执行时需要读取该文件。
+    type pwd pwd is a shell builtin  <-- pwd是内部命令
+    type top top is /usr/bin/top  <-- top是外部命令
+    查找外部命令对应的可执行文件：
+
+八、查看系统环境变量：
+    env
+    输出环境变量 echo $HOME
+    查看命令执行环境变量 echo $PATH
+
+九、打包（归档）和压缩:
+打包就是把文件组合在一起形成一个文件，不改变大小。压缩是组合在一起并按算法进行缩小
+    打包：
+    tar -cvf mytar.tar filename1
+    tar -cvf mytar.tar filename1 filename2
+    tar -cvf mytar.tar filename1 filename2 dir1 dir2
+    tar -cvf mytar.tar dir filename1 filename2 把dir文件夹 filename1、filename2文件打包为 mytar.tar文件
+         -c将多个文件或目录进行打包
+         -v显示打包文件过程
+         -f 包名 指定包的文件名。
+
+    打包并压缩：-z：压缩和解压缩 ".tar.gz" 格式；-j：压缩和解压缩 ".tar.bz2"格式。
+    tar -zcvf mytar.tar.gz filename1
+    tar -zcvf mytar.tar.gz filename1 filename2
+    tar -zcvf mytar.tar.gz filename1 filename2 dir1 dir2
+    tar -jcvf mytar.tar.bz2 filename1
+    tar -jcvf mytar.tar.bz2 filename1 filename2
+
+    解包 tar -xvf mytar.tar mydir  若不写mydir 则会解包到当前目录下
+    tar -jcvf mytar.tar.bz2 filename1 filename2 dir1 dir2
+
+    解压：
+    tar -zxvf mytar.tar.gz mydir  若不写mydir 则会解包到当前目录下
+    tar -jxvf mytar.tar.bz2 mydir  若不写mydir 则会解包到当前目录下
+
+    查看包：tar -tvf mytar.tar
+    
+    gzip压缩
+    gzip: gzip 命令只会压缩，不能打包，只把目录下的文件分别进行压缩
+    gzip filename1.txt 在当前目录下生成 filename1.txt.gz
+    gzip filename1.txt  filename2.txt 在当前目录下生成 filename1.txt.gz filename2.txt.gz
+    gzip -rv dir1 针对目录
+    -r  递归压缩指定目录下以及子目录下的所有文件。
+    -v  对于每个压缩和解压缩的文件，显示相应的文件名和压缩比。
+    gzip解压 gzip -d filename1.txt.gz
+    gunzip解压:
+    -r  递归处理，解压缩指定目录下以及子目录下的所有文件。
+    -c  把解压缩后的文件输出到标准输出设备。
+    -f  强制解压缩文件，不理会文件是否已存在等情况。
+    -l  列出压缩文件内容。
+    -v  显示命令执行过程。
+    -t  测试压缩文件是否正常，但不对其做解压缩操作。
+    gunzip -r dir1
+    
+    zip:
+    文件
+    zip filename1.zip filename1
+    zip myzip.zip filename1 filename2
+    目录
+    zip -r dir1.zip dir1
+    unzip:
+    unzip dir1.zip 解压到当前目录
+    unzip -d /tmp/ dir1.zip 解压到指定目录
+
+
+十、用户管理
+Linux 系统中的 /etc/passwd 文件，是系统用户配置文件，存储了系统中所有用户的基本信息，并且所有用户都可以对此文件执行读操作。格式：
+    用户名：密码：UID（用户ID）：GID（组ID）：描述性信息：主目录：默认Shell
+    真正的加密密码串放置在 /etc/shadow 文件中，此文件只有 root 用户可以浏览和操作
+1、添加用户 useradd  user1
+2、设置密码 passwd user1 若不指定用户名，则指修改当前登录用户密码
+    echo "123456" | passwd --stdin lamp 批量设置密码
+3、锁定用户  passwd -l user1   usermod -L user1
+4、解锁用户  passwd -u user1    usermod -U user1
+5、查看一下用户密码状态
+    chage -l lamp
+6、强制用户在第一次登录后，必须先修改密码，并利用新密码重新登陆系统，此用户才能正常使用。
+    chage -d 0 lamp
+7、删除用户，只有 root 用户才能使用
+    userdel -r 用户名 -r 选项表示在删除用户的同时删除用户的家目录。如果不删除用户的家目录，那么家目录就会变成没有属主和属组的目录，也就是垃圾文件。
+8、切换用户 su -root 
+    -：当前用户不仅切换为指定用户的身份，同时所用的工作环境也切换为此用户的环境（包括 PATH 变量、MAIL 变量等），使用 - 选项可省略用户名，默认会切换为 root 用户。
+    su 和 su - 的区别：- 选项表示在切换用户身份的同时，连当前使用的环境变量也切换成指定用户的。我们知道，环境变量是用来定义操作系统环境的，因此如果系统环境没有随用户身份切换，很多命令无法正确执行。
+9、查看当前登录用户名whoami
+10、显示当前用户登陆信息 w
+11、显示系统最新启动日期，以及每个用户的登陆详情、终端状态。who
+12、查询当前和过去登录的用户信息。last
+
+十一、权限管理
+权限位一共 11 位，但第 1 位用于表示文件的具体类型，最后一位此文件受 SELinux 的安全规则管理
+剩下的9位分3组，分别是文件的所有者、所属组、其他人。每一组的权限为rwx(读、写、执行)对应数字为（4，2，1）
+文件权限：
+    读cat、more、less、head、tail 
+    写 vim、echo>test.txt
+    执行，对文件来说是最高权限
+    目录权限：
+    读ls ll 
+    写 对目录是最高权限 建立/删除/更名/移动(touch、rm、cp、mv)文件或子目录
+    执行 对目录赋予 x 权限，代表用户可以进入目录
+
+权限设置 
+    chmod 777 .bashrc 最高权限
+    chmod 755 不让其他人修改此文件，则只需将此文件的权限该为 rwxr-xr-x（755）即可
+     chmod u=rwx,go=rx .bashrc 当前用户全部权限，用户组和其它人为 读和执行 权限
+    chmod a+w .bashrc 都可做写操作 a即 all
+
+
+十二、硬盘管理
+0、查看分区情况：fdisk -l
+1、统计分区大小和使用情况
+    df -h
+2、查看目录所在的分区及大小
+    df -h /etc
+3、查看所有（包括/proc /sys）等 df -ahT
+
+十三、挂载镜像或光驱
+ /etc/fstab 文件，此文件是自动挂载文件，系统开机时会主动读取 /etc/fstab 这个文件中的内容，根据该文件的配置，系统会自动挂载指定设备。
+1、查看挂载情况  mount
+2、挂载镜像或光驱 mkdir/mnt/cdrom/  mount /dev/sr0 /mnt/cdrom/
+3、挂载U盘
+    使用 fdisk -l 命令，即可查看到 U 盘的设备文件名/dev/sdb1
+    mkdir /mnt/usb  
+    mount -t vfat -o iocharset=utf8 /dev/sdb1 /mnt/usb/
+5、卸载 umount /mnt/cdrom
+
+十四、系统管理
+1、查看进程（静态）只显示命令执行的那一时间
+"ps aux" 可以查看系统中所有的进程；
+"ps -le" 可以查看系统中所有的进程，而且还能看到进程的父进程的 PID 和进程优先级；
+"ps -l" 只能看到当前 Shell 产生的进程；
+2、查看进程（动态）top 命令可以动态地持续监听进程地运行状态，按q退出
+
+十五、定时任务：
+定时任务开启：service crond restart
+查看定时任务：chkconfig crond on
+设定定时任务：
+    crontab -e 这个命令会用vim打开一个任务编辑，每个任务格式为：
+    * * * * * 执行的任务
+    项目      含义                          范围
+    第一个"*"  一小时当中的第几分钟（minute）  0~59
+    第二个"*"  一天当中的第几小时（hour） 0~23
+    第三个"*"  一个月当中的第几天（day）  1~31
+    第四个"*"  一年当中的第几个月（month）    1~12
+    第五个"*"  一周当中的星期几（week）  0~7（0和7都代表星期日
+    特殊符号    含义
+    *（星号）   代表任何时间。比如第一个"*"就代表一小时种每分钟都执行一次的意思。
+    ,（逗号）   代表不连续的时间。比如"0 8，12，16***命令"就代表在每天的 8 点 0 分、12 点 0 分、16 点 0 分都执行一次命令。
+    -（中杠）   代表连续的时间范围。比如"0 5 ** 1-6命令"，代表在周一到周六的凌晨 5 点 0 分执行命令。
+    /（正斜线）  代表每隔多久执行一次。比如"*/10****命令"，代表每隔 10 分钟就执行一次命令。
+    例如：
+    45 22 ***命令 在 22 点 45 分执行命令
+    0 17 ** 1命令 在每周一的 17 点 0 分执行命令
+    0 5 1，15**命令    在每月 1 日和 15 日的凌晨 5 点 0 分执行命令
+    40 4 ** 1-5命令   在每周一到周五的凌晨 4 点 40 分执行命令
+    */10 4 ***命令    在每天的凌晨 4 点，每隔 10 分钟执行一次命令
+    0 0 1，15 * 1命令  在每月 1 日和 15 日，每周一个 0 点 0 分都会执行命令
+
+    1、每隔 5 分钟就向 /tmp/test 文件中写入一行“11”，验证一下系统定时任务是否会执行。
+    [root@localhost ~]# crontab -e
+    */5 * * * * /bin/echo "11" >> /tmp/test  如果觉得每隔 5 分钟太长，那就换成“*”，让它每分钟执行一次
+
+    2、每周二的凌晨 5 点 05 分重启一次。
+    5.5 * * 2 /sbin/shutdown -r now
+
+    3、在每月 1 日、10 日、15 日的凌晨 3 点 30 分都定时执行日志备份脚本 autobak.sh。
+    30.3 1，10，15 * * /root/sh/autobak.sh
+
+查看定时任务：crontab -l
+删除定时任务 crontab -r 删除所有，若要删除个别，则用编辑命令crontab -e
+
+十六、查看硬件信息：
+dmesg
+dmesg | grep CPU #查看CPU的信息
+dmesg | grep eth0 #查看第一块网卡的信息
+
+
+十七、查看内存使用状态
+ free -m
+

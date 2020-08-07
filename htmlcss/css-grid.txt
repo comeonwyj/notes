@@ -1,0 +1,92 @@
+1.1 概述
+	定的相似性，都可以指定容器内部多个项目的位置。但是，它们也存在重大区别。
+	Flex 布局是轴线布局，只能指定"项目"针对轴线的位置，可以看作是一维布局。Grid 布局则是将容器划分成"行"和"列"，产生单元格，然后指定"项目所在"的单元格，可以看作是二维布局。Grid 布局远比 Flex 布局强大。
+	定义grid布局的元素称为“容器”，里面的格子为”子项“
+	注意，设为网格布局以后，容器子元素（子项）的float、display: inline-block、display: table-cell、vertical-align和column-*等设置都将失效。
+2.1 容器属性：
+	display:grid/inline-grid
+	grid-template-columns属性定义每一列的列宽
+	grid-template-rows属性定义每一行的行高。
+	1.像素：grid-template-columns: 100px 100px 100px;
+		.container {
+		  display: grid;
+		  grid-template-columns: 100px 100px 100px;
+		  grid-template-rows: 100px 100px 100px;
+		}
+	2.百分比：grid-template-columns: 33.33% 33.33% 33.33%;
+		.container {
+		  display: grid;
+		  grid-template-columns: 33.33% 33.33% 33.33%;
+		  grid-template-rows: 33.33% 33.33% 33.33%;
+		}
+	3.repeat:
+		.container {
+		  display: grid;
+		  grid-template-columns: repeat(3, 33.33%);
+		  grid-template-rows: repeat(3, 33.33%);
+		}
+		grid-template-columns: repeat(2, 100px 20px 80px);//按这个比例定义6列
+	4.fr（fraction）份
+		grid-template-columns: 1fr 1fr;等份两列
+		grid-template-columns: 150px 1fr 2fr;第一列150px，余下的空间第三列是第二列的2倍。
+	5.minmax() 指定范围	grid-template-columns: 1fr 1fr minmax(100px, 1fr)
+	6.auto 剩余空间	grid-template-columns: 100px auto 100px;
+	7.auto-fill 子项按某宽度自动填充父容器，当前行填充完后换下一行：
+		.container {
+		  display: grid;
+		  grid-template-columns: repeat(auto-fill, 100px);
+		}
+	8.grid-auto-flow：row/column 填充顺序：横着填充/竖着填充
+						 row dense/column dense 紧致填充，在填充过程中，如果前面行/列有剩余空间，而且当前内容可以放下，则会把剩余空间填充。
+	9.网格线的名称:方括号
+		.container {
+		  display: grid;
+		  grid-template-columns: [c1] 100px [c2] 100px [c3] auto [c4];
+		  grid-template-rows: [r1] 100px [r2] 100px [r3] auto [r4];
+		}
+		可以是多个：[c1 cline1] 100px [c2 cline2] 100px [c3 cline3] auto [c4 cline4];
+	10.子项间距：grid-row-gap/grid-column-gap
+						=>grid-gap:x y(grid-gap:both)
+						=>gap:x y(gap:both)
+	11.区域：grid-template-areas 属性
+		.container {
+		  display: grid;
+		  grid-template-columns: 100px 100px 100px;
+		  grid-template-rows: 100px 100px 100px;
+		  grid-template-areas: 'a b c'
+		                       'd e f'
+		                       'g h i';
+		}
+		合并区域：
+		grid-template-areas: 'a a a'
+                     		 'b b b'
+                     		 'c c c';
+    grid-template-areas: "header header header"
+                     		 "main main sidebar"
+                     		 "footer footer footer";
+		区域线：区域名-start/区域名-end
+	12、对齐（子项内容对齐方式）：justify-items 横向 align-items纵向 		=>place-items:x y
+			start/end/center/stretch
+	13、整体对齐:justify-content/align-content 横/纵	=>place-content
+			start/end/center/stretch/space-around/space-between/space-evenly
+3.子项属性（items）
+	1.grid-column-start/grid-column-end/grid-row-start/grid-row-end
+		当前子项填充线的位置：纵向起始线/终止线/横向起始线/终止线
+		.item-1{
+			grid-column-start:2;
+			grid-column-end:4
+		}
+		.item-1{
+			grid-column-start:header-start;
+			grid-column-end:header-end;
+		}
+	2.跨越（span）  grid-column-start:span 2==grid-column-end:span 2; 跨越2个网格
+	3.grid-column/grid-row 上面方式的简写：用'/'分开start与end
+		.item-1{
+			grid-column:2/4; //or grid-column:2/span 2
+		}
+		斜杠以及后面的部分可以省略，默认填充第一个网格。grid-column:1; grid-row:1
+	4.某一子项对齐：justify-self（横向）/align-self（纵向）==place-self（两者或两者同时） start | end | center | stretch;
+	
+	
+	

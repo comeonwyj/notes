@@ -1,0 +1,42 @@
+css3:
+
+1.box-shadow理解
+box-shadow: h-shadow v-shadow blur spread color inset;
+h-shadow 相对于要投影的元素投影的x坐标
+v-shadow 相对于要投影的元素投影的y坐标
+blur  模糊的范围是多少像素
+spread 投影在原元素的基础上向外扩展多少像素
+color  投影颜色
+inset  向内投影
+可以把投影看作元素附带的一个绝对定位的盒子，盒子大小和原来一样，h,v决定了针对原元素的位置偏移多少
+spread可以把盒子的尺寸由中心向外扩大，例如，可以用这个特性给盒子加外边框：
+div{
+	box-shadow:0,0,0,10px,#f00;
+}
+
+2.背景图像之 linear-gradient理解
+linear-gradient（方向,颜色列表用逗号隔开）
+方向：1.用单词表示：to right/to top/to left/to bottom/to top right等组合
+		2.用角度表示：-30deg/90deg
+颜色列表：如果是都是颜色值，则表示颜色均匀渐变
+			 如果颜色后紧跟一个值（像素或百分比等），则这个值的含义是表示颜色在方向线上纯色的长度。
+			 //红色从0开始向绿色渐变,范围是0%-100%			
+			 linear-gradient(to right,red,green) ==>red 0%,green 100%
+			 //红色到绿色的渐变范围是20px-100%,20px之前是红色
+			 linear-gradient(to right,red 20px,green)==>red 0%,red 20px,green 100%
+			 //红色到绿色渐变范围是20px-80px,20px之前是红色，80px之后是绿色
+			 linear-gradient(to right,red 20px,green 80px) ==> red 0%,red 20px,green 80px,green 100%
+			 linear-gradient(to right,red 20%,blue,green 80%)==>red 0%,red 20%,blue 50%,blue 50%,green 80%,green 100%
+			 //如果第二个之后的颜色不与前面发生渐变，产生条纹状，则第二个或之后的颜色跟的值设为0，例如
+			 linear-gradient(to right red 20%,green 0,green 40%,blue 0,blue 60%,yellow 0,yellow 80%,gray 0)
+			 
+3.背景图像之完整格式：
+background:bg-color bg-image position/bg-size bg-repeat bg-origin bg-clip bg-attachment initial|inherit;
+bg-size length|percentage|cover|contain; 而且必须跟在position的后面。
+			 
+4.border-radius 的四个角分别指定角度：
+	border-radius:left-top-x-len right-top-xlen right-bottom-xlen left-bottom-xlen /
+								left-top-y-len right-top-ylen right-bottom-ylen left-bottom-ylen		
+	解析，角度是从左上 右上 右下 左下顺时针设置四个角度，每个角度参与弯曲的边长，x是指横向边长，y是指纵向边长	 
+			 
+			 

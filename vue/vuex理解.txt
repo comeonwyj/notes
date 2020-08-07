@@ -1,0 +1,5 @@
+Vuex
+state====data
+getters====compute
+mutation====methods单个动作
+actions======async mutations 多人在线的动作

@@ -1,0 +1,39 @@
+1、代码提示
+安装typings
+npm install -g typings
+
+在项目下安装nodejs的代码提示依赖
+npm install @types/node
+在项目下安装jquery.js的代码提示
+npm i @types/jquery
+2、代码运行
+安装Code Runner插件
+3、网页实时刷新
+安装Liver Server插件
+4、应用SCSS并实时刷新
+第一步  下载扩展Live Sass Compiler
+第二步 
+点状态栏的watch图标
+或
+快捷键 ctrl+shift+p 输入live 并选择Live Sass：Watch Sass
+第三步 在setting里设置：
+ "liveSassCompile.settings.formats":[
+        // This is Default.这是默认的
+        {
+            "format": "expanded",
+            "extensionName": ".css",
+            "savePath": null //表示当前目录
+        },
+        // You can add more
+        {
+            "format": "compressed",
+            "extensionName": ".min.css",
+            "savePath": "/dist/css"
+        },
+        // More Complex
+        {
+            "format": "compressed",
+            "extensionName": ".min.css",
+            "savePath": "~/../css/"
+        }
+    ]

@@ -1,0 +1,113 @@
+modal/Supplier.js
+	var mongoose=require('mongoose')
+	var Schema=mongoose.Schema
+
+	var SupplierSchema=new Schema({
+	  SupplierID:Number,
+	  CompanyName:String,
+	  ContactName:String,
+	  ContactTitle:String,
+	  Address:String,
+	  City:String,
+	  Region:String,
+	  PostalCode:Number,
+	  Country:String,
+	  Phone:String,
+	  Fax:String,
+	  HomePage:String
+	})
+	module.exports=mongoose.model('Supplier',SupplierSchema)
+
+router/index.js
+	var express = require('express');
+	var router = express.Router();
+	var mongoose=require('mongoose')
+	var Suppliers=require('../modal/Supplier')
+	mongoose.connect('mongodb://10.10.34.15/Northwind',{useNewUrlParser:true,useUnifiedTopology:true},err=>{
+	  if(err){
+	    console.log(err)
+	  }else{
+	    console.log('connect successed')
+	  }
+	})
+	router.get('/', function(req, res, next) {
+	  res.render('index', { title: 'Express',subject:'Jade',list:['aaa','bbb','ccc','ddd'] });
+	});
+	...
+	router.get('/suppliers',(req,res,next)=>{
+	  Suppliers.find({}).sort({SupplierID:1}).exec((err,supplier)=>{
+	    if(err){
+	      res.json({
+	        status:false,
+	        msg:err.message
+	      })
+	    }else{
+	      // console.log(supplier)
+	      res.render('suppliers',{status:true,msg:'ok',supplier:supplier})
+	    }
+	  })
+	})
+
+
+1、增
+	一、save方法
+		var Tank = mongoose.model('Tank', yourSchema);
+		var small = new Tank({ size: 'small' });
+		small.save(function (err) {
+		  if (err) return handleError(err);
+		  // saved!
+		});
+	二、create方法
+		Tank.create({ size: 'small' }, function (err, small) {
+		  if (err) return handleError(err);
+		  // saved!
+		});
+		userMode.create({
+		    name: userInfo.name,
+		    password: userInfo.password,
+		    age: userInfo.age
+		}, function (error, doc) {
+		    if (error) {
+		        console.error(error);
+		    } else {
+		        console.error(doc);     
+		    }
+
+	三、insert方法
+	// or, for inserting large batches of documents
+	Tank.insertMany([{ size: 'small' }], function(err) {
+
+	});
+2、删除
+	删除符合条件的第一个文档：
+	Model.remove(conditions,callback);
+	Model.deleteOne(conditions,callback);
+	删除符合条件的所有文档：
+	Model.deleteMany(conditions,callback);
+
+	ank.deleteOne({ size: 'large' }, function (err) {
+	  if (err) return handleError(err);
+	  // deleted at most one tank document
+	});
+3、改
+	Tank.updateOne({ size: 'large' }, { name: 'T-90' }, function(err, res) {
+	  // 至多修改一项, `res.modifiedCount` 包含更新的记录数
+	});
+	如查修改一项并返回新修改的，用
+	findOneAndUpdate([conditions],[update],[options],[callback])
+	此功能默认返回修改前的文档，如果要返回修改后的文档，则options设为 new:true
+	若要返回普通java对象而不是文档对象，则options增设 lean:true
+	returnOriginal:false 和 new:true 一样
+
+	通常情况下，mongoose用save()方法更新文档，可以充分利用验证和中间件技术
+	// Mongoose sends a `updateOne({ _id: doc._id }, { $set: { name: 'foo' } })`
+	// to MongoDB.
+	const doc = await MyModel.findOne();
+	doc.name = 'foo';
+	await doc.save();
+
+	// Delete the document so Mongoose won't be able to save changes
+	const doc = await MyModel.findOne();
+	await MyModel.deleteOne({ _id: doc._id });
+	doc.name = 'foo';
+	await doc.save(); // Throws DocumentNotFoundError

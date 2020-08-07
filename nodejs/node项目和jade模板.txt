@@ -1,0 +1,118 @@
+一、jade的基本使用（node项目）
+	>mkdir nodedemo
+	>cd nodedemo
+	>npm init
+	>npm install express jade -S
+	const express=require("express");
+	const jade=require("jade");
+	const fs=require('fs');
+	var app=express();
+	 
+	//引用jade
+	app.set('views',"view");  //设置视图的对应目录
+	app.set("view engine","jade");      //设置默认的模板引擎
+	app.engine('jade', jade.__express);     //定义模板引擎
+	 
+	//获取jade文件
+	var str=jade.renderFile("./view/index.jade",{pretty:true});
+	console.log(str);
+	 
+	app.use("/",function(req,res){
+	    res.render("index.jade");
+	});
+ 
+	app.listen(8080);
+二、express项目环境中使用
+	首先安装express-generator项目生成器
+	>npm install -g express-generator
+	1.创建express项目		
+		>mkdir jadeproject
+		>cd jadeproject
+		>express (express-generator默认使用jade模板引擎，如果使用ejs 则：express -e )
+		>npm install
+		上述3步也可以这样：
+		>express jadedemo 或express -e ejsdemo
+		>cd jadedemo
+		>npm install
+	2.配置
+		在package.json 把"start": "node ./bin/www" 改为"start": "nodemon ./bin/www"，可以不用重启服务，客户端刷新就可以看到变化。
+三、Jade语法
+	1.用缩进表示dom层级，html标签后跟空格+内容 表示标签内容：
+		html
+			head
+				style
+			body
+				.content
+					h2 测试
+		对于嵌套来说，除了使用上面的缩进方法外，如果是只有一个子元素，可以使用: 来实现嵌套 注意：冒号后面一定要有一个空格！
+		ul#books
+		  li: a(href="#book-a") Book A
+		  li: a(href="#book-b") Book B
+	2.“|”符号 将内容原封不动的输出,不进行jade转义解析：
+		p
+      | center
+      | a(href='www.baidu.com') baidu //不会被jade转义
+    script
+      | var cli=document.getElementById('container')
+      | cli.onclick=function(){
+      |   alert('aaa');
+      | }
+    更为快捷的script定义用 script.
+    script.
+	    var cli = document.getElementById("content");
+	    cli.onclick=function(){
+	        alert("aaa");
+	    }
+    对于多行文本，在标签的所有属性之后使用单独的.，其下级缩进的内容都将视为文本。
+  3.引入其他js文件
+  	script
+　　		include click.js
+　　	style
+      include style.css
+　　	include ./includes/head.jade
+　　	.content
+　　		include:markdown article.md
+    npm install one of "marked","supermarked","markdown-js","markdown"
+	4.#{} 或 = 用来输出表达式或变量
+		=还用来输出原字符字串，用！= 不输出原字串，标签进行解析
+		p= 'This code is' + ' <strong>not</strong> escaped!'
+		will be: <p>This code is <strong>not</strong> escaped!</p>
+		p!= 'This code is' + ' <strong>not</strong> escaped!'
+		will be:<p>This code is not（粗体） escaped!</p>
+	5.“-”允许我们直接写js语法，循环for|while|unless、条件if.. else if .. else|case when 换行后的标签要有缩进、
+		-for(var i=5;i>arr;i--)
+      div=i
+    div the number = #{i}
+		
+	6.case 条件 when
+		-var test = "汉子"
+    -var none = "无"
+    div The word is #{test}
+    case test
+        when "a": div the when is a
+        when "b": div the second is b
+        when "汉子": div the Third is 汉子
+        default: The words is #{none}
+	7.if else
+		-for(var i=12;i>0;i--)
+      -if(i%2==0)
+      	div(style={background:'#eee',width:'100%',height:'20px',color: '#333'}) 偶数
+      -else
+        div(style={background:'#333',width:'100%',height:'20px',color: '#eee'}) 奇数
+   8.for 和 while循环与js一样
+   9.mixin 可以定义复用结构，可传参数
+   10.数组遍历each x,i in list
+   		-list=['a','b','c','d']
+   		each item in list
+   			li=i+','+item
+   		健壮代码，判断数组空不空，若空设置默认值：
+   		- var values = [];
+			ul
+			each val in values.length ? values : ['There are no values']
+				li= val
+   11.在Jade中，使用和C系语言相似的方式进行赋值和运算：
+   	foo = "hello"
+		tmp = "world" + "!"
+		h1= foo
+		  span= tmp
+		Jade怎么知道等号左边是变量名还是标签呢？变量后面等号前必须加空格，而标签直接接等号，不能加空格！
