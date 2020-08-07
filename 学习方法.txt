@@ -1,4 +1,0 @@
-思考（核心问题）-->记忆与逻辑与推理<--->总结
-
-css js  vue react 前端
-nodejs mongodb 后端
